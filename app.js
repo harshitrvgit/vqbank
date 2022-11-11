@@ -3,6 +3,8 @@
  */
 const express = require("express");
 const morgan = require("morgan");
+const ejsMate = require("ejs-mate");
+const path = require("path");
 
 /**
  * Declarations
@@ -21,7 +23,9 @@ const userRouter = require("./router/user/user.auth.router.js");
 //
   /** Stripe webhook requests **/
 //
-
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
 app.use(morgan("dev"));
 
 /**
@@ -32,8 +36,8 @@ app.use("/api/v1/users", userRouter);
 /**
  * Home route
  */
-app.route("/").get((req, res)=>{
-    return res.status(200).send({message: "Hello world!"});
+app.route("/vqbank").get((req, res)=>{
+    return res.render("vqbank/index");
 });
 
 /**
