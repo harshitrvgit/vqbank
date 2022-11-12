@@ -36,6 +36,13 @@ app.use(express.json());
 app.use("/api/v1/users", userRouter);
 
 /**
+ * Landing page route
+ */
+app.route("/").get((req, res)=>{
+    return res.render("landing");
+});
+
+/**
  * Home route
  */
 app.route("/vqbank").get((req, res)=>{
