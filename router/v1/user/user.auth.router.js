@@ -6,7 +6,7 @@ const { Router } = require("express");
 /**
  * User controller 
  */
-const { registerUser } = require("../../contollers/user/user.auth.controller.js");
+const { registerUser, renderRegister } = require("../../../controllers/v1/user/user.auth.controller.js");
 
 /**
  * Router object
@@ -16,6 +16,8 @@ const userRouter = Router();
 /**
  * Routes
  */
-userRouter.route("/register").get(registerUser);
+userRouter.route("/register")
+    .get(renderRegister)
+    .post(registerUser)
 
 module.exports = userRouter;
