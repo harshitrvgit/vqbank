@@ -14,8 +14,9 @@ const connectDB = async (url = process.env.MONGODB_URI) => {
             useUnifiedTopology: true
         });
         if (con) console.log("Connected to db --> " + con.connections[0].name);
+        else throw new Error("Connection to db failed!");
     } catch (e) {
-        console.log(`Error: ${e}`);
+        console.error(`Error: ${e}`);
     }
 };
 

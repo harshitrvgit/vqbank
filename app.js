@@ -7,11 +7,13 @@ const ejsMate = require("ejs-mate");
 const path = require("path");
 const flash = require("connect-flash");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 /**
  * Utils
  */
 const connectDB = require("./utils/connectDB.js");
+const AppError = require("./utils/server-error-handling/AppError.js");
 
 /**
  * Configs
@@ -43,6 +45,7 @@ app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser(process.env.SIGN_COOKIE));
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(async (req, res, next) => {
@@ -64,19 +67,27 @@ app.route("/").get((req, res) => {
 });
 
 /**
- * Home route
- */
-app.route("/vqbank").get((req, res) => {
-    return res.render("vqbank/index");
-});
-
-/**
  * Sever status
  */
 app.route("/status").get((req, res) => {
     res.status(200).send({ message: "Server is running" });
 });
 
+/**
+ * If none of the routes matches.
+ */
+app.all('*', (req, res, next) => {
+    next(new AppError('This page does not exist or unavailable.', 404));
+})
+
+/**
+ * Default error handling middleware.
+ */
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message = "Something went wrong", stack } = err;
+    console.log(err)
+    res.render("error", { statusCode, message });
+})
 
 const runServer = async () => {
     try {
