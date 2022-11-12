@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken")
 
 /**
- * This function create a JWT Token based on user._id, secret key and expiration time
- * 
- * @param {object} user 
- * @returns {string} JWT Token  
+ * @description - This function create a JWT Token based on user._id, secret key and expiration time
+ * @param {object} - user id
+ * @returns {string} - JWT Token  
  */
 const newToken = (id) => {
     return jwt.sign({
