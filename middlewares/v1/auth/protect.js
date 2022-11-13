@@ -1,12 +1,12 @@
 /**
  * Utils
  */
-const { verifyToken } = require("../../utils/jwt.js");
+const { verifyToken } = require("../../../utils/jwt.js");
 
 /**
  * Models
  */
-const User = require("../../models/user.model.js");
+const User = require("../../../models/user.model.js");
 
 /**
  * @description - Protects routes from unauthorized access.
