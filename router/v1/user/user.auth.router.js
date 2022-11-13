@@ -19,7 +19,7 @@ const { renderVqbank } = require("../../../controllers/v1/user/user.controller.j
 /**
  * Middlewares
  */
-const protect = require("../../../middlewares/auth/protect.js");
+const protect = require("../../../middlewares/v1/auth/protect.js");
 
 /**
  * Router object
