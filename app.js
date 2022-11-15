@@ -32,6 +32,8 @@ const PORT = process.env.PORT || 3000;
 const userRouter = require("./router/v1/user/user.auth.router.js");
 const v2UserRouter = require("./router/v2/user/user.v2.auth.router.js");
 
+const paperRouter = require("./router/v1/paper/paper.router.js");
+
 /**
  * Middlewares
  */
@@ -59,6 +61,8 @@ app.use(async (req, res, next) => {
 app.use("/api/v1", userRouter);
 app.use("/api/v2", v2UserRouter);
 
+app.use("/api/v1", paperRouter);
+
 /**
  * Landing page route
  */
@@ -85,9 +89,20 @@ app.all('*', (req, res, next) => {
  */
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong", stack } = err;
-    console.log(err)
+
+    //! Refactoring required
+    if(statusCode === 415) {
+        req.flash("error", message);
+        return res.redirect("/api/v1/upload");
+    }
+    if(err.name === "MulterError") {
+        req.flash("error", err.message);
+        return res.redirect("/api/v1/upload");
+    }
+    //! --------------------------------------------
+    console.log(err.name);
     res.render("error", { statusCode, message });
-})
+});
 
 const runServer = async () => {
     try {

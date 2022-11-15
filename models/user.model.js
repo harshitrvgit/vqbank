@@ -37,9 +37,9 @@ const userSchema = new Schema({
     }
   }]
 },
-{
-  timestamps: true
-})
+  {
+    timestamps: true
+  })
 
 /**
  * PRE
@@ -57,18 +57,18 @@ const userSchema = new Schema({
  */
 userSchema.pre("save", async function (next) {
   try {
-      if(this.isModified("password")){
-          const hash = await bcrypt.hash(this.password, 8);
-          this.password = hash;
-      }
-      if(this.isModified("otp")){
-        const otpHash = await bcrypt.hash(this.otp, 8);
-        this.otp = otpHash;
-      }
+    if (this.isModified("password")) {
+      const hash = await bcrypt.hash(this.password, 8);
+      this.password = hash;
+    }
+    if (this.isModified("otp")) {
+      const otpHash = await bcrypt.hash(this.otp, 8);
+      this.otp = otpHash;
+    }
 
-      next();
+    next();
   } catch (err) {
-      next(err);
+    next(err);
   }
 });
 
@@ -87,26 +87,35 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.checkPassword = function (password) {
   const passwordHash = this.password;
   return new Promise((resolve, reject) => {
-      bcrypt.compare(password, passwordHash, (err, same) => {
+    bcrypt.compare(password, passwordHash, (err, same) => {
       if (err) {
-          return reject(err);
+        return reject(err);
       }
       resolve(same);
-      });
+    });
   });
 }
 
 userSchema.methods.checkOTP = function (otp) {
   const otpHash = this.otp;
   return new Promise((resolve, reject) => {
-      bcrypt.compare(otp, otpHash, (err, same) => {
+    bcrypt.compare(otp, otpHash, (err, same) => {
       if (err) {
-          return reject(err);
+        return reject(err);
       }
       resolve(same);
-      });
+    });
   });
 }
+
+/**
+ * @description - This is a virtual field, which is not stored in the database, but can be accessed
+ */
+userSchema.virtual('papers', {
+  ref: 'Paper',
+  localField: '_id',
+  foreignField: 'user',
+});
 
 const User = mongoose.model('User', userSchema)
 

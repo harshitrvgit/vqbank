@@ -19,11 +19,10 @@ const protect = async (req, res, next) => {
             jwtToken = req.signedCookies.token;
 
             const payload = await verifyToken(jwtToken, process.env.JWT_SECRET);
-            console.log(payload);
             // *!
             // console.log(payload);
 
-            req.user = await User.findById(payload.id);
+            req.user = await User.findById(payload.id).select("-password -tokens");
             if (!req.user) {
                 req.flash("error", "You are not authorized to access this page.");
                 return res.redirect("/api/v1/login");

@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate') %>
+
+<div>
+    <h1>Upload Questions</h1>
+    <form action="/api/v1/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" />
+        <input type="submit" />
+    </form>
+</div> 

@@ -16,9 +16,10 @@ const checkRole = (...roles) => (req, res, next) => {
         return res.redirect('/api/v1/login');
     }
     const hasRole = roles.find(role => req.user.role === role);
+    
     if (!hasRole) {
         req.flash("error", "You are not authorized to perform this action");
-        return res.redirect("/products");
+        return res.redirect("/api/v1/upload");
     }
     return next();
 };
