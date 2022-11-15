@@ -19,7 +19,6 @@ const protect = async (req, res, next) => {
             jwtToken = req.signedCookies.token;
 
             const payload = await verifyToken(jwtToken, process.env.JWT_SECRET);
-            console.log(payload);
             // *!
             // console.log(payload);
 
