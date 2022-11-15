@@ -15,7 +15,8 @@ const role = require("../../../middlewares/v1/auth/role.js");
  */
 const {
     renderUpload,
-    uploadPaper
+    uploadPaper,
+    getAllPapers
 } = require("../../../controllers/v1/paper/paper.controller.js");
 
 const paperRouter = Router();
@@ -27,5 +28,7 @@ paperRouter.route("/upload")
     .get(renderUpload)
     .post(protect, role.checkRole(role.ROLES.Admin), upload.single("file"), uploadPaper);
 
+paperRouter.route("/papers")
+    .get(getAllPapers);
 
 module.exports = paperRouter;

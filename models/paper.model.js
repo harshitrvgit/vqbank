@@ -27,6 +27,10 @@ const paperSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  downloads: {
+    type: Number,
+    default: 0
   }
 },
   {
