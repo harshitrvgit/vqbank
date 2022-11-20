@@ -21,6 +21,6 @@ const v2CheckRole = (...roles) => (req, res, next) => {
     return next();
 };
 
-const role = { ROLES, v2CheckRole };
+const v2Role = { ROLES, v2CheckRole };
 
-module.exports = role;
+module.exports = v2Role;
