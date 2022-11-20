@@ -100,7 +100,7 @@ app.use((err, req, res, next) => {
         return res.redirect("/api/v1/upload");
     }
     //! --------------------------------------------
-    console.log(err.name);
+   
     res.render("error", { statusCode, message });
 });
 
