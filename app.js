@@ -29,6 +29,8 @@ const PORT = process.env.PORT || 3000;
 /**
  * Routes imports
  */
+const adminRouter = require("./router/v1/admin/admin.router.js");
+
 const userRouter = require("./router/v1/user/user.auth.router.js");
 const v2UserRouter = require("./router/v2/user/user.v2.auth.router.js");
 
@@ -52,13 +54,15 @@ app.use(cookieParser(process.env.SIGN_COOKIE));
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(async (req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    next();
+	res.locals.success = req.flash("success");
+	res.locals.error = req.flash("error");
+	next();
 });
 /**
  * Routes middlewares
  */
+app.use("/api/v1", adminRouter);
+
 app.use("/api/v1", userRouter);
 app.use("/api/v2", v2UserRouter);
 
@@ -69,52 +73,52 @@ app.use("/api/v2", v2PaperRouter);
  * Landing page route
  */
 app.route("/").get((req, res) => {
-    return res.render("landing");
+	return res.render("landing");
 });
 
 /**
  * Sever status
  */
 app.route("/status").get((req, res) => {
-    res.status(200).send({ message: "Server is running" });
+	res.status(200).send({ message: "Server is running" });
 });
 
 /**
  * If none of the routes matches.
  */
-app.all('*', (req, res, next) => {
-    next(new AppError('This page does not exist or unavailable.', 404));
-})
+app.all("*", (req, res, next) => {
+	next(new AppError("This page does not exist or unavailable.", 404));
+});
 
 /**
  * Default error handling middleware.
  */
 app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Something went wrong", stack } = err;
+	const { statusCode = 500, message = "Something went wrong", stack } = err;
 
-    //! Refactoring required
-    if(statusCode === 415) {
-        req.flash("error", message);
-        return res.redirect("/api/v1/upload");
-    }
-    if(err.name === "MulterError") {
-        req.flash("error", err.message);
-        return res.redirect("/api/v1/upload");
-    }
-    //! --------------------------------------------
-   
-    res.render("error", { statusCode, message });
+	//! Refactoring required
+	if (statusCode === 415) {
+		req.flash("error", message);
+		return res.redirect("/api/v1/upload");
+	}
+	if (err.name === "MulterError") {
+		req.flash("error", err.message);
+		return res.redirect("/api/v1/upload");
+	}
+	//! --------------------------------------------
+
+	res.render("error", { statusCode, message });
 });
 
 const runServer = async () => {
-    try {
-        await connectDB();
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch (e) {
-        console.log(`Error: ${e}`);
-    }
+	try {
+		await connectDB();
+		app.listen(PORT, () => {
+			console.log(`Server is running on port ${PORT}`);
+		});
+	} catch (e) {
+		console.log(`Error: ${e}`);
+	}
 };
 
 runServer();
