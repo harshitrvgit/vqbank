@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 
 const opts = { toJSON: { virtuals: true } }
 
+let paperId = "1234";
+
 const userSchema = new Schema({
   email: {
     type: String,
@@ -35,11 +37,17 @@ const userSchema = new Schema({
       type: String,
       required: true
     }
-  }]
+  }],
+  purchasedPapers:[
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Paper"
+    }
+  ]
 },
   {
     timestamps: true
-  })
+  }, opts);
 
 /**
  * PRE

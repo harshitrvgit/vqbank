@@ -42,7 +42,7 @@ module.exports.uploadPaper = catchAsync(async (req, res) => {
  */
 module.exports.getAllPapers = catchAsync(async (req, res) => {
     const papers = await Paper.find({}).select("-__v -buffer");
-    console.log(papers);
+    console.log("all papers", papers);
     return res.render("vqbank/index", {
         papers
     });

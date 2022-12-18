@@ -25,7 +25,7 @@ const v2Protect = async (req, res, next) => {
 
         // Find the user with the given id who also has the provided token in his tokens array
         const user = await User.findOne({ _id: payload.id, "tokens.token": token });
-        if (!user) return res.status(400).send({ message: "No user found" });
+        if (!user) return res.status(400).send({ message: "No user found, login first" });
 
         req.token = token;
         req.user = user;
