@@ -21,24 +21,24 @@ const {
 /**
  * Router object
  */
-const v2UserRouter = Router();
+const v2UserAuthRouter = Router();
 
 /**
  * Routes
  */
-v2UserRouter.route("/register")
+v2UserAuthRouter.route("/register")
     .get((req, res) => {
         return res.status(200).send("v2 register page");
     })
     .post(v2RegisterUser);
 
-v2UserRouter.route("/login")
+v2UserAuthRouter.route("/login")
     .post(v2LoginUser)
 
-v2UserRouter.route("/logout")
+v2UserAuthRouter.route("/logout")
     .get(v2Protect, v2LogoutUser)
 
-v2UserRouter.route("/logoutAll")
+v2UserAuthRouter.route("/logoutAll")
     .get(v2Protect, v2LogoutAllSessions)
 
-module.exports = v2UserRouter;
+module.exports = v2UserAuthRouter;

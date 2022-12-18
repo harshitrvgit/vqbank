@@ -24,26 +24,26 @@ const protect = require("../../../middlewares/v1/auth/protect.js");
 /**
  * Router object
  */
-const userRouter = Router();
+const userAuthRouter = Router();
 
 /**
  * Routes
  */
-userRouter.route("/register")
+userAuthRouter.route("/register")
     .get(renderRegister)
     .post(registerUser)
 
-userRouter.route("/login")
+userAuthRouter.route("/login")
     .get(renderLogin)
     .post(loginUser)
 
-userRouter.route("/logout")
+userAuthRouter.route("/logout")
     .get(protect, logoutUser)
 
-userRouter.route("/logoutAll")
+userAuthRouter.route("/logoutAll")
     .get(protect, logoutAllSessions)
 
-userRouter.route("/vqbank")
+userAuthRouter.route("/vqbank")
     .get(protect, renderVqbank)
 
-module.exports = userRouter;
+module.exports = userAuthRouter;

@@ -30,9 +30,10 @@ const PORT = process.env.PORT || 3000;
  * Routes imports
  */
 const adminRouter = require("./router/v1/admin/admin.router.js");
+const userRouter = require("./router/v1/user/user.router.js");
 
-const userRouter = require("./router/v1/user/user.auth.router.js");
-const v2UserRouter = require("./router/v2/user/user.v2.auth.router.js");
+const userAuthRouter = require("./router/v1/user/user.auth.router.js");
+const v2UserAuthRouter = require("./router/v2/user/user.v2.auth.router.js");
 
 const paperRouter = require("./router/v1/paper/paper.router.js");
 const v2PaperRouter = require("./router/v2/paper/paper.v2.router.js");
@@ -62,9 +63,10 @@ app.use(async (req, res, next) => {
  * Routes middlewares
  */
 app.use("/api/v1", adminRouter);
-
 app.use("/api/v1", userRouter);
-app.use("/api/v2", v2UserRouter);
+
+app.use("/api/v1", userAuthRouter);
+app.use("/api/v2", v2UserAuthRouter);
 
 app.use("/api/v1", paperRouter);
 app.use("/api/v2", v2PaperRouter);
