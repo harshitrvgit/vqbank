@@ -34,14 +34,11 @@ userAuthRouter.route("/register")
     .post(registerUser)
 
 userAuthRouter.route("/login")
-    .get(renderLogin)
+    .get(protect, renderLogin)
     .post(loginUser)
 
 userAuthRouter.route("/logout")
     .get(protect, logoutUser)
-
-userAuthRouter.route("/logoutAll")
-    .get(protect, logoutAllSessions)
 
 userAuthRouter.route("/vqbank")
     .get(protect, renderVqbank)

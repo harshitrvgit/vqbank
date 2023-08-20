@@ -17,7 +17,10 @@ const genDownloadFile = require("../../../middlewares/v1/paper/genDownloadFile.j
 const {
     renderUpload,
     uploadPaper,
-    getAllPapers
+    getAllPapers,
+    viewPaper,
+    getSuggestions,
+    sortPapers
 } = require("../../../controllers/v1/paper/paper.controller.js");
 
 const paperRouter = Router();
@@ -30,9 +33,17 @@ paperRouter.route("/upload")
     .post(protect, role.checkRole(role.ROLES.Admin), upload.single("file"), uploadPaper);
 
 paperRouter.route("/papers")
-    .get(getAllPapers);
+    .get(protect, getAllPapers);
 
-paperRouter.route("/paper/download/:paperId")
-    .get(protect, genDownloadFile)
+paperRouter.route("/paper/view/:paperId")
+    .get(protect, viewPaper)
+
+
+paperRouter.route("/paper/suggestions")
+    .get(protect, getSuggestions)
+
+paperRouter.route("/paper/sort")
+    .get(protect, sortPapers)
+    .post(protect, sortPapers)
 
 module.exports = paperRouter;

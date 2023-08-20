@@ -8,12 +8,18 @@ const path = require("path");
 const flash = require("connect-flash");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const { Readable } = require("stream");
 
 /**
  * Utils
  */
 const connectDB = require("./utils/connectDB.js");
 const AppError = require("./utils/server-error-handling/AppError.js");
+
+/**
+ * Models
+ */
+const Paper = require("./models/paper.model.js");
 
 /**
  * Configs
@@ -49,6 +55,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.SIGN_COOKIE));
@@ -76,6 +83,30 @@ app.use("/api/v2", v2PaperRouter);
  */
 app.route("/").get((req, res) => {
 	return res.render("landing");
+});
+
+app.route("/pdf/:id").get(async (req, res) => {
+	try {
+		const paper = await Paper.findById("64e0a548b0667f1a37faee18");
+
+		if (!paper) {
+			return res.status(404).send("PDF not found");
+		}
+		console.log(paper.originalname);
+
+		res.setHeader("Content-Type", `${paper.mimetype}`);
+		res.setHeader(
+			"Content-Disposition",
+			`inline; filename=${paper.originalname}`
+		);
+
+		const readStream = new Readable();
+		readStream.push(paper.buffer);
+		readStream.push(null);
+		readStream.pipe(res);
+	} catch (e) {
+		res.status(500).send("Internal Server Error");
+	}
 });
 
 /**

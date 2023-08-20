@@ -34,7 +34,7 @@ const protect = async (req, res, next) => {
 
         if (!jwtToken) {
             req.flash("error", "You need to login first");
-            return res.redirect('/api/v1/login');
+            return res.render('auth/user/login');
         }
     } catch (e) {
         if (e.name === "JsonWebTokenError") {

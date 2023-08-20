@@ -3,11 +3,50 @@
 <h3>Question Papers</h3>
 <hr>
 
+<input type="text" id="searchBar" placeholder="Search by paper title" />
+<div id="suggestions"></div>
+
+<h1>Sort</h1>
+<form action="/api/v1/paper/sort" method="POST">
+    <select name="programmeName" id="programmeName">
+        <option value="mca">MCA</option>
+        <option value="btech">B.Tech</option>
+        <option value="mtech">M.Tech</option>
+        <option value="msc">M.Sc</option>
+        <option value="other">Other</option>
+    </select>
+
+    <select name="semester" id="semester" required>
+        <option value="fall-sem">FALL-SEM</option>
+        <option value="winter-sem">WINTER-SEM</option>
+        <option value="summmer-sem">SUMMER-SEM</option>
+        <option value="other">Other</option>
+    </select>
+
+    <select name="assessmentType" id="assessment-type" required>
+        <option value="cat-1">CAT-1</option>
+        <option value="cat-2">CAT-2</option>
+        <option value="mid-term">MID-TERM</option>
+        <option value="fat">FAT</option>
+        <option value="re-fat">RE-FAT</option>
+        <option value="re-cat">RE-CAT</option>
+        <option value="other">Other</option>
+    </select>
+    <input type="submit" value="Sort">
+</form>
+
+<div id="search-content">
+     
+</div>
+
+<div>
+
+</div>
 <% for (paper of papers) { %>
-    <h4><%= paper.originalname %></h4>
+    <h4><%= paper.courseTitle || paper.originalname %></h4>
     <p><%= paper.size / 1000 %>kb</p>
-    <form action="/api/v1/paper/download/<%= paper._id %>" method="get">
-        <input type="submit" value="Download">
-    </form>
+    <a class="btn btn-primary" href="/api/v1/paper/view/<%= paper._id %>" target="_blank">View</a>
+    <a href="/api/v1/paper/view/<%= paper._id %>" download="<%= paper.originalname %>">Download</a>
     <hr>
-<% } %>  
+<% } %> 
+<script src="/js/suggestions.js"></script>

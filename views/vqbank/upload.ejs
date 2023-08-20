@@ -1,9 +1,36 @@
 <% layout('layouts/boilerplate') %>
 
-<div>
-    <h1>Upload Questions</h1>
-    <form action="/api/v1/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="file" />
-        <input type="submit" />
-    </form>
-</div> 
+    <div>
+        <h1>Upload Questions</h1>
+        <form action="/api/v1/upload" method="post" enctype="multipart/form-data">
+            <select name="programmeName" id="programme" required>
+                <option value="mca">
+                    MCA
+                </option>
+                <option value="btech">B.Tech</option>
+                <option value="mtech">M.Tech</option>
+                <option value="msc">M.Sc</option>
+                <option value="other">Other</option>
+            </select>
+            <select name="semester" id="semester" required>
+                <option value="fall-sem">FALL-SEM</option>
+                <option value="winter-sem">WINTER-SEM</option>
+                <option value="summmer-sem">SUMMER-SEM</option>
+                <option value="other">Other</option>
+            </select>
+            <select name="assessmentType" id="assessment-type" required>
+                <option value="cat-1">CAT-1</option>
+                <option value="cat-2">CAT-2</option>
+                <option value="mid-term">MID-TERM</option>
+                <option value="fat">FAT</option>
+                <option value="re-fat">RE-FAT</option>
+                <option value="re-cat">RE-CAT</option>
+                <option value="other">Other</option>
+            </select>
+
+
+            <input type="text" name="courseTitle" id="course-title" placeholder="Enter course title" required>
+            <input type="file" name="file" id="file" required/>
+            <input type="submit" />
+        </form>
+    </div>
