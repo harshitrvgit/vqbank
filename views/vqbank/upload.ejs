@@ -1,9 +1,9 @@
 <% layout('layouts/boilerplate') %>
 
-    <div>
-        <h1>Upload Questions</h1>
+    <div class="center-item">
+        <h1 class="mb-3">Upload Paper</h1>
         <form action="/api/v1/upload" method="post" enctype="multipart/form-data">
-            <select name="programmeName" id="programme" required>
+            <select class="form-select mb-3" name="programmeName" id="programme" required>
                 <option value="mca">
                     MCA
                 </option>
@@ -12,13 +12,13 @@
                 <option value="msc">M.Sc</option>
                 <option value="other">Other</option>
             </select>
-            <select name="semester" id="semester" required>
+            <select class="form-select mb-3" name="semester" id="semester" required>
                 <option value="fall-sem">FALL-SEM</option>
                 <option value="winter-sem">WINTER-SEM</option>
                 <option value="summmer-sem">SUMMER-SEM</option>
                 <option value="other">Other</option>
             </select>
-            <select name="assessmentType" id="assessment-type" required>
+            <select class="form-select mb-3" name="assessmentType" id="assessment-type" required>
                 <option value="cat-1">CAT-1</option>
                 <option value="cat-2">CAT-2</option>
                 <option value="mid-term">MID-TERM</option>
@@ -28,9 +28,16 @@
                 <option value="other">Other</option>
             </select>
 
+            <div class="mb-3">
+                <input class="form-control" type="text" name="courseTitle" id="course-title"
+                    placeholder="Enter course title" required>
+            </div>
 
-            <input type="text" name="courseTitle" id="course-title" placeholder="Enter course title" required>
-            <input type="file" name="file" id="file" required/>
-            <input type="submit" />
+
+            <div class="mb-3">
+                <input class="form-control" name="file" type="file" id="file" required>
+            </div>
+
+            <input class="btn btn-primary w-100" type="submit" value="Upload"/>
         </form>
     </div>

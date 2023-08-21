@@ -93,6 +93,9 @@ module.exports.viewPaper = catchAsync(async (req, res) => {
 
 	const paper = await Paper.findById(paperId);
 
+	paper.views += 1;
+	await paper.save();
+
 	if (!paperId || !paper) {
 		return res.status(404).send("Paper not found");
 	}
@@ -115,7 +118,7 @@ module.exports.getSuggestions = catchAsync(async (req, res) => {
 	const suggestions = await Paper.find({
 		courseTitle: { $regex: new RegExp(query, "i") },
 	})
-		.select("originalname size _id courseTitle")
+		.select("mimetype size user views semester  assessmentType courseTitle programmeName")
 		.limit(10);
 
 	// originalname, size, _id
@@ -141,9 +144,8 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 		.select("originalname size _id courseTitle")
 		.limit(10);
 
-	
-	if(papers.length === 0) {
-		req.flash("error", "No papers found");
+	if (papers.length === 0) {
+		req.flash("error", "No papers found :( Try different filter...");
 		return res.redirect("/api/v1/papers");
 	}
 

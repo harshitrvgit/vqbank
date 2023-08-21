@@ -29,7 +29,7 @@ const paperRouter = Router();
  * Routes
  */
 paperRouter.route("/upload")
-    .get(renderUpload)
+    .get(protect, renderUpload)
     .post(protect, role.checkRole(role.ROLES.Admin), upload.single("file"), uploadPaper);
 
 paperRouter.route("/papers")

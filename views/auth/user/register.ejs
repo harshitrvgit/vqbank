@@ -1,13 +1,22 @@
 <% layout('layouts/boilerplate') %>
 
-<div>
-    <form action="/api/v1/register" method="post">
-        <label for="email"></label>
-        <input type="email" name="email" id="email" placeholder="enter your mail">
-
-        <label for="password"></label>
-        <input type="password" name="password" id="password" placeholder="enter your password">
-
-        <button type="submit">Submit</button>
-    </form>
-</div>
+    <div class="center-item">
+        <div>
+            <h1>Sign Up</h1>
+        </div>
+        <div>
+            <form action="/api/v1/register" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" id="email" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <p class="mt-1">Already have a account?<a class="mt-3" href="/api/v1/login"> Login</a></p>
+        </div>
+    </div>

@@ -19,8 +19,6 @@ const protect = async (req, res, next) => {
             jwtToken = req.signedCookies.token;
 
             const payload = await verifyToken(jwtToken, process.env.JWT_SECRET);
-            // *!
-            // console.log(payload);
 
             req.user = await User.findById(payload.id).select("-password -tokens");
             if (!req.user) {
@@ -53,9 +51,11 @@ const protect = async (req, res, next) => {
 
             res.clearCookie("token");
 
+            req.flash("error", "Login to continue");
             return res.redirect("/api/v1/login");
         }
         console.error(e);
+
         req.flash("error", "Something went wrong. Please try again later.");
         return res.redirect("/api/v1/login");
     }

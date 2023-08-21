@@ -18,7 +18,15 @@ const catchAsync = require("../../../utils/server-error-handling/catchAsyncError
  * @description: Render the register page
  */
 module.exports.renderRegister = (req, res) => {
-	return res.render("auth/user/register");
+	if (req.token) {
+		req.flash(
+			"success",
+			"You are already logged in, try logging out before signing up again"
+		);
+		return res.redirect("/api/v1/papers");
+	} else {
+		return res.render("auth/user/register");
+	}
 };
 
 /**
@@ -64,7 +72,7 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 	res.cookie("token", token, { signed: true });
 	req.flash("success", "Welcome to vqbank");
 
-	return res.redirect("/api/v1/vqbank");
+	return res.redirect("/api/v1/papers");
 });
 
 /**
