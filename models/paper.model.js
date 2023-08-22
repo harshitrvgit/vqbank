@@ -35,16 +35,24 @@ const paperSchema = new Schema(
 		},
 		semester: {
 			type: String,
+			required: true
 		},
 		assessmentType: {
 			type: String,
+			required: true
 		},
 		courseTitle: {
 			type: String,
+			required: true,
 		},
 		programmeName: {
 			type: String,
+			required: true
 		},
+		visibility: {
+			type: Boolean,
+			default: true
+		}
 	},
 	{
 		timestamps: true,
