@@ -37,7 +37,6 @@ const userAuthRouter = require("./router/v1/user/user.auth.router.js");
 const v2UserAuthRouter = require("./router/v2/user/user.v2.auth.router.js");
 
 const paperRouter = require("./router/v1/paper/paper.router.js");
-const v2PaperRouter = require("./router/v2/paper/paper.v2.router.js");
 
 /**
  * Middlewares
@@ -72,7 +71,6 @@ app.use("/api/v1", userAuthRouter);
 app.use("/api/v2", v2UserAuthRouter);
 
 app.use("/api/v1", paperRouter);
-app.use("/api/v2", v2PaperRouter);
 
 /**
  * Landing page route

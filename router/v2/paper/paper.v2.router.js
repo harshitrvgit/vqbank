@@ -9,7 +9,7 @@ const upload = require("../../../utils/multer.js");
  */
 const v2Protect = require("../../../middlewares/v2/auth/v2Protect.js");
 const v2Role = require("../../../middlewares/v2/auth/v2Role.js");
-const v2GenDownloadFile = require("../../../middlewares/v2/paper/v2GenDownloadFile.js")
+const v2GenDownloadFile = require("../../../middlewares/v2/paper/v2GenDownloadFile.js");
 
 /**
  * Controller
