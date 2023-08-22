@@ -7,6 +7,10 @@
     "start": "node app.js",
     "dev": "env-cmd -f ./env/dev.env nodemon app.js"
   },
+  "engines" : { 
+    "npm" : ">=9.5.1",
+    "node" : ">=18.16.0"
+  },
   "author": "harshitrv",
   "license": "MIT",
   "dependencies": {
