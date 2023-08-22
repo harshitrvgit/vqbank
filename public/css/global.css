@@ -8,3 +8,10 @@
 .zero-radius {
     border-radius: 0;
 }
+
+.footer {
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	background-color: #f5f5f5;
+}

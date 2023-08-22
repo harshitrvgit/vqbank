@@ -43,9 +43,6 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 		return res.redirect("/api/v1/register");
 	}
 
-	// *! ---
-	// return res.status(200).send({ email, password });
-
 	const existingUser = await User.findOne({
 		$or: [
 			{
@@ -65,7 +62,7 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 	});
 
 	const token = newToken(user._id);
-	user.tokens.push({ token });
+	
 	await user.save();
 
 	// setting token to session and logging user in
@@ -79,15 +76,7 @@ module.exports.registerUser = catchAsync(async (req, res) => {
  * @description: Render the login page
  */
 module.exports.renderLogin = (req, res) => {
-	if (req.token) {
-		req.flash(
-			"success",
-			"You are already logged in, try logging out before logging in again"
-		);
-		return res.redirect("/api/v1/papers");
-	} else {
-		return res.render("auth/user/login");
-	}
+	return res.render("auth/user/login");
 };
 
 /**

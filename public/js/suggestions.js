@@ -4,14 +4,13 @@ console.log("suggestions.js loaded...");
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const searchBar = document.getElementById("searchBar");
-const suggestionsContainer = document.getElementById("suggestions");
 const searchContent = document.getElementById("search-content");
 
 searchBar.addEventListener("input", async () => {
 	const query = searchBar.value.trim();
 
 	if (query === "") {
-		suggestionsContainer.innerHTML = "";
+		searchContent.innerHTML = "";
 		return;
 	}
 

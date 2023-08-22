@@ -34,7 +34,7 @@ userAuthRouter.route("/register")
     .post(registerUser)
 
 userAuthRouter.route("/login")
-    .get(protect, renderLogin)
+    .get(renderLogin)
     .post(loginUser)
 
 userAuthRouter.route("/logout")

@@ -15,8 +15,13 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" class="form-control" id="password">
                 </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="show-password">
+                    <label class="form-check-label" for="show-password">Show Password</label>
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <p class="mt-1">Already have a account?<a class="mt-3" href="/api/v1/login"> Login</a></p>
         </div>
     </div>
+    <script src="/js/toggleShowPassword.js"></script>
