@@ -16,7 +16,6 @@ const connectDB = require("./utils/connectDB.js");
 const AppError = require("./utils/server-error-handling/AppError.js");
 const { getLoggedInUser } = require("./utils/getLoggedInUser.js");
 
-
 /**
  * Configs
  */
@@ -102,6 +101,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
 	const { statusCode = 500, message = "Something went wrong", stack } = err;
 
+	console.error(err);
 	//! Refactoring required
 	if (statusCode === 415) {
 		req.flash("error", message);
