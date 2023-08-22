@@ -71,7 +71,7 @@ module.exports.uploadPaper = catchAsync(async (req, res) => {
 	await paper.save();
 
 	req.flash("success", "Paper uploaded successfully");
-	return res.redirect("/papers");
+	return res.redirect("/api/v1/papers");
 });
 
 /**
