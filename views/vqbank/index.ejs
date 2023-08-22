@@ -15,6 +15,7 @@
 
     <form action="/api/v1/paper/sort" method="POST">
         <select class="form-select mb-3" name="programmeName" id="programmeName">
+            <option value="<%= options?.programmeName %>"><%= options?.programmeName?.toUpperCase() || "--Please choose an option--" %></option>
             <option value="mca">MCA</option>
             <option value="btech">B.Tech</option>
             <option value="mtech">M.Tech</option>
@@ -23,6 +24,7 @@
         </select>
 
         <select class="form-select mb-3" name="semester" id="semester" required>
+            <option value="<%= options?.semester %>"><%= options?.semester?.toUpperCase() || "--Please choose an option--" %></option>
             <option value="fall-sem">FALL-SEM</option>
             <option value="winter-sem">WINTER-SEM</option>
             <option value="summmer-sem">SUMMER-SEM</option>
@@ -30,6 +32,7 @@
         </select>
 
         <select class="form-select mb-3" name="assessmentType" id="assessment-type" required>
+            <option value="<%= options?.assessmentType %>"><%= options?.assessmentType?.toUpperCase() || "--Please choose an option--" %></option>
             <option value="cat-1">CAT-1</option>
             <option value="cat-2">CAT-2</option>
             <option value="mid-term">MID-TERM</option>

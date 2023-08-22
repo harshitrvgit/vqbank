@@ -82,6 +82,7 @@ module.exports.getAllPapers = catchAsync(async (req, res) => {
 
 	return res.render("vqbank/index", {
 		papers,
+		options: {}
 	});
 });
 
@@ -141,7 +142,7 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 	);
 
 	const papers = await Paper.find(query)
-		.select("originalname size _id courseTitle")
+		.select("-__v -buffer")
 		.limit(10);
 
 	if (papers.length === 0) {
@@ -151,5 +152,6 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 
 	res.render("vqbank/index", {
 		papers,
+		options: req.body
 	});
 });

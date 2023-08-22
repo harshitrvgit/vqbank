@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "env-cmd -f ./env/dev.env nodemon app.js"
+    "dev": "env-cmd -f ./env/dev.env nodemon app.js",
+    "prod": "env-cmd -f ./env/prod.env nodemon app.js"
   },
   "engines" : { 
     "npm" : ">=9.5.1",
