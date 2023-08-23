@@ -13,7 +13,12 @@ const Paper = require("../../../models/paper.model.js");
  *
  */
 module.exports.renderUpload = (req, res) => {
-	return res.render("vqbank/upload");
+	return res.render("vqbank/upload", {
+		paper: {},
+		button: "Upload",
+		action: "/api/v1/upload",
+		required: true,
+	});
 };
 
 module.exports.uploadPaper = catchAsync(async (req, res) => {
@@ -82,7 +87,7 @@ module.exports.getAllPapers = catchAsync(async (req, res) => {
 
 	return res.render("vqbank/index", {
 		papers,
-		options: {}
+		options: {},
 	});
 });
 
@@ -119,7 +124,9 @@ module.exports.getSuggestions = catchAsync(async (req, res) => {
 	const suggestions = await Paper.find({
 		courseTitle: { $regex: new RegExp(query, "i") },
 	})
-		.select("mimetype size user views semester  assessmentType courseTitle programmeName")
+		.select(
+			"mimetype size user views semester  assessmentType courseTitle programmeName"
+		)
 		.limit(10);
 
 	// originalname, size, _id
@@ -141,9 +148,7 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 		(key) => query[key] === undefined && delete query[key]
 	);
 
-	const papers = await Paper.find(query)
-		.select("-__v -buffer")
-		.limit(10);
+	const papers = await Paper.find(query).select("-__v -buffer").limit(10);
 
 	if (papers.length === 0) {
 		req.flash("error", "No papers found :( Try different filter...");
@@ -152,6 +157,113 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 
 	res.render("vqbank/index", {
 		papers,
-		options: req.body
+		options: req.body,
 	});
+});
+
+/**
+ * @description Render Edit paper
+ */
+module.exports.renderEditPaper = catchAsync(async (req, res) => {
+	const { id } = req.params;
+	const paper = await Paper.findById(id).select("-buffer");
+
+	if (!paper) {
+		req.flash("error", "Paper doesn't exist");
+		return res.redirect("/papers");
+	}
+
+	return res.render("vqbank/upload", {
+		paper,
+		button: "Update",
+		action: `/api/v1/paper/edit/${id}?_method=PUT`,
+		required: false,
+	});
+});
+
+/**
+ * @description Edits paper
+ */
+module.exports.editPaper = catchAsync(async (req, res) => {
+	console.log("updating paper", req.body);
+	console.log("updating paper", req.file);
+
+	const { id } = req.params;
+	const { semester, assessmentType, courseTitle, programmeName } = req.body;
+
+	if (!semester || !assessmentType || !courseTitle || !programmeName) {
+		console.log("validation failed...");
+		req.flash("error", "Please fill all the fields");
+		return res.redirect(`/api/v1/paper/edit/${id}`);
+	}
+
+	const validProgrammeNames = ["mca", "btech", "mtech", "msc", "other"];
+	const validSemesters = ["fall-sem", "winter-sem", "summer-sem", "other"];
+	const validAssessmentTypes = [
+		"cat-1",
+		"cat-2",
+		"mid-term",
+		"fat",
+		"re-fat",
+		"re-cat",
+		"other",
+	];
+
+	if (
+		!validProgrammeNames.includes(programmeName) ||
+		!validSemesters.includes(semester) ||
+		!validAssessmentTypes.includes(assessmentType)
+	) {
+		req.flash("error", "Invalid options choosen");
+		return res.redirect(`/api/v1/paper/edit/${id}`);
+	}
+
+	if (courseTitle.length > 75) {
+		req.flash(
+			"error",
+			"Invalid course title, title length must be within 75 characters"
+		);
+		return res.redirect(`/api/v1/paper/edit/${id}`);
+	}
+
+	const paper = await Paper.findById(id);
+
+	if (!paper) {
+		req.flash("error", "Paper doesn't exist");
+		return res.redirect("/papers");
+	}
+
+	let query = {
+		$set: {},
+	};
+
+	for (let key in req.body) {
+		if (paper[key] && paper[key] !== req.body[key]) {
+			query.$set[key] = req.body[key];
+		}
+	}
+
+	// checking if the file is changed
+	if (req.file?.buffer && Buffer.compare(req.file.buffer, paper.buffer) !== 0) {
+		query.$set.fieldname = req.file.fieldname;
+		query.$set.originalname = req.file.originalname;
+		query.$set.encoding = req.file.encoding;
+		query.$set.mimetype = req.file.mimetype;
+		query.$set.buffer = req.file.buffer;
+		query.$set.size = req.file.size;
+	}
+
+	// check if the user is changed
+	if (req.user._id.toString() !== paper.user.toString()) {
+		query.$set.user = req.user._id;
+	}
+
+	// Update the paper
+	await Paper.findByIdAndUpdate(id, query["$set"], {
+		new: true,
+		runValidators: true,
+	})
+
+	req.flash("success", "Paper updated successfully");
+	return res.redirect("/api/v1/papers");
 });

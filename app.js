@@ -8,6 +8,7 @@ const path = require("path");
 const flash = require("connect-flash");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const methodOverride = require("method-override");
 
 /**
  * Utils
@@ -52,6 +53,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride('_method'));
 app.use(cookieParser(process.env.SIGN_COOKIE));
 app.use(session(sessionConfig));
 app.use(flash());

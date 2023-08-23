@@ -19,7 +19,7 @@ const checkRole = (...roles) => (req, res, next) => {
     
     if (!hasRole) {
         req.flash("error", "You are not authorized to perform this action");
-        return res.redirect("/api/v1/upload");
+        return res.redirect("/api/v1/papers");
     }
     return next();
 };
