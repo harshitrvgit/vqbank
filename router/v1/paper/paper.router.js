@@ -21,8 +21,9 @@ const {
 	viewPaper,
 	getSuggestions,
 	sortPapers,
-    renderEditPaper,
+	renderEditPaper,
 	editPaper,
+	deletePaper
 } = require("../../../controllers/v1/paper/paper.controller.js");
 
 const paperRouter = Router();
@@ -54,6 +55,15 @@ paperRouter
 paperRouter
 	.route("/paper/edit/:id")
 	.get(protect, role.checkRole(role.ROLES.Admin), renderEditPaper)
-    .put(protect, role.checkRole(role.ROLES.Admin), upload.single("file"), editPaper)
+	.put(
+		protect,
+		role.checkRole(role.ROLES.Admin),
+		upload.single("file"),
+		editPaper
+	);
+
+paperRouter
+	.route("/paper/delete/:id")
+	.delete(protect, role.checkRole(role.ROLES.Admin), deletePaper);
 
 module.exports = paperRouter;

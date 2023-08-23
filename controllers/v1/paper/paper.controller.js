@@ -262,8 +262,15 @@ module.exports.editPaper = catchAsync(async (req, res) => {
 	await Paper.findByIdAndUpdate(id, query["$set"], {
 		new: true,
 		runValidators: true,
-	})
+	});
 
 	req.flash("success", "Paper updated successfully");
+	return res.redirect("/api/v1/papers");
+});
+
+module.exports.deletePaper = catchAsync(async (req, res) => {
+	const { id } = req.params;
+	await Paper.findByIdAndDelete(id);
+	req.flash("success", "Paper deleted successfully");
 	return res.redirect("/api/v1/papers");
 });
