@@ -58,13 +58,12 @@ searchBar.addEventListener("input", async () => {
                                 <a class="btn btn-outline-primary" href="/api/v1/paper/view/${ paper._id }" target="_blank">View</a>
                                 <a class="btn btn-success ms-3" href="/api/v1/paper/view/${ paper._id }" download="${ paper.originalname }">Download</a>
 
-                                <a type="button" class="btn btn-warning position-relative ms-3" href="/api/v1/paper/edit/${paper._id}">
-                                    Edit
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        Admin
-                                        <span class="visually-hidden">Need admin perms</span>
-                                    </span>
-                                </a>
+                                <div class="btn-group ms-3" role="group" aria-label="admin accessible buttons">
+                                    <a type="button" href="/api/v1/paper/edit/${paper._id}" class="btn btn-outline-warning">Edit</a>
+                                    <form class="btn btn-danger" action="/api/v1/paper/delete/${paper._id}?_method=DELETE" method="post">
+                                        <button class="unbutton" type="submit">Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
