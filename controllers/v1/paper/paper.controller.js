@@ -129,8 +129,6 @@ module.exports.getSuggestions = catchAsync(async (req, res) => {
 		)
 		.limit(10);
 
-	// originalname, size, _id
-	console.log(suggestions);
 	res.status(200).json(suggestions);
 });
 
@@ -185,9 +183,6 @@ module.exports.renderEditPaper = catchAsync(async (req, res) => {
  * @description Edits paper
  */
 module.exports.editPaper = catchAsync(async (req, res) => {
-	console.log("updating paper", req.body);
-	console.log("updating paper", req.file);
-
 	const { id } = req.params;
 	const { semester, assessmentType, courseTitle, programmeName } = req.body;
 
