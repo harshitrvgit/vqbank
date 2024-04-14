@@ -28,3 +28,35 @@
 	appearance: none;
 	color: white;
 }
+
+.google_btn_container {
+	border: 1px solid #c2c8d0;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.google_btn_container > a {
+	list-style: none;
+	text-decoration: none;
+	color: inherit;
+}
+
+.google_btn_container:hover {
+	background-color: #0d6efd;
+	color: #fff;
+}
+
+.google__btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.google__svg {
+	display: flex;
+	width: 25px;
+	height: 25px;
+}

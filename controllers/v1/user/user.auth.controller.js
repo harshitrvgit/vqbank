@@ -62,7 +62,7 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 	});
 
 	const token = newToken(user._id);
-	
+
 	await user.save();
 
 	// setting token to session and logging user in
@@ -124,5 +124,5 @@ module.exports.loginUser = catchAsync(async (req, res) => {
 module.exports.logoutUser = catchAsync(async (req, res) => {
 	res.clearCookie("token");
 	req.flash("success", "You have been logged out");
-	return res.redirect("/api/v1/login");
+	return res.redirect("/logout");
 });

@@ -9,18 +9,24 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const methodOverride = require("method-override");
-
+const { auth } = require("express-openid-connect");
 /**
  * Utils
  */
 const connectDB = require("./utils/connectDB.js");
 const AppError = require("./utils/server-error-handling/AppError.js");
 const { getLoggedInUser } = require("./utils/getLoggedInUser.js");
+const { newToken } = require("./utils/jwt.js");
+/**
+ * Models
+ */
+const User = require("./models/user.model.js");
 
 /**
  * Configs
  */
 const sessionConfig = require("./configs/sessionConfig.js");
+const authZeroConfig = require("./configs/authZeroConfig.js");
 
 /**
  * Declarations
@@ -42,12 +48,16 @@ const paperRouter = require("./router/v1/paper/paper.router.js");
 /**
  * Middlewares
  */
+const checkAuthZeroLogin = require("./middlewares/v1/auth/checkAuthZeroLogin.js");
 //
 /** Stripe webhook requests **/
 //
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
+app.use(session(sessionConfig));
+app.use(flash());
+app.use(auth(authZeroConfig));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")));
@@ -55,8 +65,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(cookieParser(process.env.SIGN_COOKIE));
-app.use(session(sessionConfig));
-app.use(flash());
 app.use(async (req, res, next) => {
 	res.locals.user = await getLoggedInUser(req, res);
 	res.locals.success = req.flash("success");
@@ -77,7 +85,7 @@ app.use("/api/v1", paperRouter);
 /**
  * Landing page route
  */
-app.route("/").get(async (req, res) => {
+app.route("/").get(checkAuthZeroLogin, async (req, res) => {
 	if (req.signedCookies && req.signedCookies.token) {
 		return res.redirect("/api/v1/papers");
 	}
@@ -104,7 +112,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
 	const { statusCode = 500, message = "Something went wrong", stack } = err;
 
-	console.error(err);
+	console.error('[DEFUALT ERROR HANDLER]: ', err);
 	//! Refactoring required
 	if (statusCode === 415) {
 		req.flash("error", message);
@@ -113,6 +121,10 @@ app.use((err, req, res, next) => {
 	if (err.name === "MulterError") {
 		req.flash("error", err.message);
 		return res.redirect("/api/v1/upload");
+	}
+	if (err.name === "AggregateError") {
+		req.flash("error", "You are offline. Check your network.");
+		return res.redirect("/api/v1/login");
 	}
 	//! --------------------------------------------
 
