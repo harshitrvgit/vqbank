@@ -1,8 +1,9 @@
 .center-item {
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: calc(100vh - 58px);
+	flex-direction: column;
 }
 
 .zero-radius {
