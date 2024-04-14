@@ -15,7 +15,6 @@ module.exports.renderAdmin = async (req, res) => {
  */
 module.exports.getAllUsers = async (req, res) => {
 	const users = await User.find();
-	console.log(users);
 	return res.render("admin/users", {
 		users,
 	});
