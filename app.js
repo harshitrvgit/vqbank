@@ -53,7 +53,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "node_modules/bootstrap/dist")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 app.use(cookieParser(process.env.SIGN_COOKIE));
 app.use(session(sessionConfig));
 app.use(flash());
@@ -77,7 +77,10 @@ app.use("/api/v1", paperRouter);
 /**
  * Landing page route
  */
-app.route("/").get((req, res) => {
+app.route("/").get(async (req, res) => {
+	if (req.signedCookies && req.signedCookies.token) {
+		return res.redirect("/api/v1/papers");
+	}
 	return res.render("landing");
 });
 
@@ -124,6 +127,7 @@ const runServer = async () => {
 		});
 	} catch (e) {
 		console.log(`Error: ${e}`);
+		process.exit(1);
 	}
 };
 
