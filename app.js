@@ -16,18 +16,11 @@ const { auth } = require("express-openid-connect");
 const connectDB = require("./utils/connectDB.js");
 const AppError = require("./utils/server-error-handling/AppError.js");
 const { getLoggedInUser } = require("./utils/getLoggedInUser.js");
-const { newToken } = require("./utils/jwt.js");
-/**
- * Models
- */
-const User = require("./models/user.model.js");
-
 /**
  * Configs
  */
 const sessionConfig = require("./configs/sessionConfig.js");
 const authZeroConfig = require("./configs/authZeroConfig.js");
-
 /**
  * Declarations
  */
@@ -85,7 +78,7 @@ app.use("/api/v1", paperRouter);
 /**
  * Landing page route
  */
-app.route("/").get(checkAuthZeroLogin, async (req, res) => {
+app.route("/").get(async (req, res) => {
 	if (req.signedCookies && req.signedCookies.token) {
 		return res.redirect("/api/v1/papers");
 	}
@@ -96,7 +89,7 @@ app.route("/").get(checkAuthZeroLogin, async (req, res) => {
  * Sever status
  */
 app.route("/status").get((req, res) => {
-	res.status(200).send({ message: "Server is running" });
+	res.status(200).json({ message: "Server is running" });
 });
 
 /**
@@ -112,7 +105,6 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
 	const { statusCode = 500, message = "Something went wrong", stack } = err;
 
-	console.error('[DEFUALT ERROR HANDLER]: ', err);
 	//! Refactoring required
 	if (statusCode === 415) {
 		req.flash("error", message);
@@ -133,9 +125,10 @@ app.use((err, req, res, next) => {
 
 const runServer = async () => {
 	try {
+		// If you feel like removing await on next line then don't.
 		await connectDB();
 		app.listen(PORT, () => {
-			console.log(`Server is running on port ${PORT}`);
+			console.log(`Server is running on port ${PORT} 🔥`);
 		});
 	} catch (e) {
 		console.log(`Error: ${e}`);

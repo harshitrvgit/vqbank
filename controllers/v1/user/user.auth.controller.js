@@ -38,8 +38,8 @@ module.exports.registerUser = catchAsync(async (req, res) => {
 		req.flash("error", "Invalid email address");
 		return res.redirect("/api/v1/register");
 	}
-	if (!validator.isLength(password, { min: 6, max: 20 })) {
-		req.flash("error", "Password must be between 6 and 20 characters");
+	if (!validator.isLength(password, { min: 6, max: 50 })) {
+		req.flash("error", "Password must be between 6 and 50 characters");
 		return res.redirect("/api/v1/register");
 	}
 
