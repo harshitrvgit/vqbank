@@ -2,7 +2,7 @@
 
 <div style="display: flex; justify-content: center;"> 
     <img style="margin-right: 1em;" alt="Discord" src="https://img.shields.io/discord/764030364611117056">
-    <img style="margin-right: 1em; alt="Uptime Robot status" src="https://img.shields.io/uptimerobot/status/m795122959-46f8db1b0389c3351a0b6cb3">
+    <img style="margin-right: 1em; alt="Uptime Robot status" src="https://img.shields.io/uptimerobot/status/m802121882-7e0d5a15830f7f6b47e444d8">
     <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/hrv_vishwakarma">
 
 </div>
@@ -15,13 +15,13 @@
 
 ### Prerequisites
 
-- NodeJS v16.x
-- MongoDB v5.x  [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+- NodeJS v22.x | Bun
+- MongoDB v7.x  [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
 - MongoDB Compass(optional)
 
 1. Install dependencies:
 ```sh
-npm install
+nvm use && npm install
 ```
 2. Create a ```dev.env``` file in the ```env``` folder root of the project 
 ```sh
