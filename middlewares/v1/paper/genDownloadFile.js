@@ -1,13 +1,13 @@
 /**
  * Node modules.
  */
-const fs = require("fs");
-const Readable = require("stream").Readable;
+import fs from 'node:fs';
+import { Readable } from 'node:stream';
 
 /**
  * Model import.
  */
-const Paper = require("../../../models/paper.model.js");
+import Paper from '../../../models/paper.model.js';
 
 /**
  * @description - This function reads the buffer data and generates the file.
@@ -21,34 +21,30 @@ const genDownloadFile = async (req, res, next) => {
 
 		if (!paperId)
 			return res.status(404).send({
-				message: "required paper id",
+				message: 'required paper id',
 			});
 
 		const paper = await Paper.findById(paperId);
-        const originalname = paper.originalname;
+		const originalname = paper.originalname;
 
 		if (!paper)
 			return res.status(404).send({
-				message: "paper not found",
+				message: 'paper not found',
 			});
 
-		const paperExtension = paper.originalname.split(".").pop();
-        const paperOriginalName = paper.originalname.split(".")[0];
+		const paperExtension = paper.originalname.split('.').pop();
+		const paperOriginalName = paper.originalname.split('.')[0];
 
 		const paperData = paper.buffer;
 		const readable = new Readable();
 		readable.push(paperData);
 		readable.push(null);
 
-		if (!fs.existsSync("./uploads")) {
-			fs.mkdirSync("./uploads");
+		if (!fs.existsSync('./uploads')) {
+			fs.mkdirSync('./uploads');
 		}
 
-		if (
-			!fs.existsSync(
-				`./uploads/${paperOriginalName}.${paperExtension}`
-			)
-		) {
+		if (!fs.existsSync(`./uploads/${paperOriginalName}.${paperExtension}`)) {
 			const writeStream = fs.createWriteStream(
 				`./uploads/${paperOriginalName}.${paperExtension}`
 			);
@@ -59,8 +55,8 @@ const genDownloadFile = async (req, res, next) => {
 
 		return res.status(200).download(downloadPath, originalname);
 	} catch (e) {
-        next(e);
-    }
+		next(e);
+	}
 };
 
-module.exports = genDownloadFile;
+export default genDownloadFile;

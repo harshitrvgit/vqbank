@@ -1,53 +1,53 @@
 /**
  * Utils
  */
-const catchAsync = require("../../../utils/server-error-handling/catchAsyncError.js");
+import catchAsync from '../../../utils/server-error-handling/catchAsyncError.js';
 
 /**
  * Models
  */
-const Paper = require("../../../models/paper.model.js");
+import Paper from '../../../models/paper.model.js';
 
 /**
  * @description - This method renders the upload page.
  *
  */
-module.exports.renderUpload = (req, res) => {
-	return res.render("vqbank/upload", {
+export const renderUpload = (req, res) => {
+	return res.render('vqbank/upload', {
 		paper: {},
-		button: "Upload",
-		action: "/api/v1/upload",
+		button: 'Upload',
+		action: '/api/v1/upload',
 		required: true,
 	});
 };
 
-module.exports.uploadPaper = catchAsync(async (req, res) => {
+export const uploadPaper = catchAsync(async (req, res) => {
 	// Check if paper already exists
 	const existingPaper = await Paper.findOne({
 		buffer: req.file.buffer,
 	});
 
 	if (existingPaper) {
-		req.flash("error", "Paper already exists");
-		return res.redirect("/api/v1/upload");
+		req.flash('error', 'Paper already exists');
+		return res.redirect('/api/v1/upload');
 	}
 
-	const validProgrammeNames = ["mca", "btech", "mtech", "msc", "other"];
-	const validSemesters = ["fall-sem", "winter-sem", "summer-sem", "other"];
+	const validProgrammeNames = ['mca', 'btech', 'mtech', 'msc', 'other'];
+	const validSemesters = ['fall-sem', 'winter-sem', 'summer-sem', 'other'];
 	const validAssessmentTypes = [
-		"cat-1",
-		"cat-2",
-		"mid-term",
-		"fat",
-		"re-fat",
-		"re-cat",
-		"other",
+		'cat-1',
+		'cat-2',
+		'mid-term',
+		'fat',
+		're-fat',
+		're-cat',
+		'other',
 	];
 
 	const { programmeName, semester, assessmentType, courseTitle } = req.body;
 	if (!programmeName || !semester || !assessmentType || !courseTitle) {
-		req.flash("error", "Please fill all the fields");
-		return res.redirect("/api/v1/upload");
+		req.flash('error', 'Please fill all the fields');
+		return res.redirect('/api/v1/upload');
 	}
 
 	if (
@@ -55,16 +55,16 @@ module.exports.uploadPaper = catchAsync(async (req, res) => {
 		!validSemesters.includes(semester) ||
 		!validAssessmentTypes.includes(assessmentType)
 	) {
-		req.flash("error", "Invalid option");
-		return res.redirect("/api/v1/upload");
+		req.flash('error', 'Invalid option');
+		return res.redirect('/api/v1/upload');
 	}
 
 	if (courseTitle.length > 75) {
 		req.flash(
-			"error",
-			"Invalid course title, only alphanumeric characters are allowed"
+			'error',
+			'Invalid course title, only alphanumeric characters are allowed'
 		);
-		return res.redirect("/api/v1/upload");
+		return res.redirect('/api/v1/upload');
 	}
 
 	const paper = new Paper({
@@ -75,17 +75,17 @@ module.exports.uploadPaper = catchAsync(async (req, res) => {
 
 	await paper.save();
 
-	req.flash("success", "Paper uploaded successfully");
-	return res.redirect("/api/v1/papers");
+	req.flash('success', 'Paper uploaded successfully');
+	return res.redirect('/api/v1/papers');
 });
 
 /**
  * @description - Gets all the papers.
  */
-module.exports.getAllPapers = catchAsync(async (req, res) => {
-	const papers = await Paper.find({}).select("-__v -buffer");
+export const getAllPapers = catchAsync(async (req, res) => {
+	const papers = await Paper.find({}).select('-__v -buffer');
 
-	return res.render("vqbank/index", {
+	return res.render('vqbank/index', {
 		papers,
 		options: {},
 	});
@@ -94,7 +94,7 @@ module.exports.getAllPapers = catchAsync(async (req, res) => {
 /**
  * @description View paper
  */
-module.exports.viewPaper = catchAsync(async (req, res) => {
+export const viewPaper = catchAsync(async (req, res) => {
 	const { paperId } = req.params;
 
 	const paper = await Paper.findById(paperId);
@@ -103,14 +103,14 @@ module.exports.viewPaper = catchAsync(async (req, res) => {
 	await paper.save();
 
 	if (!paperId || !paper) {
-		return res.status(404).send("Paper not found");
+		return res.status(404).send('Paper not found');
 	}
 
 	res.setHeader(
-		"Content-Disposition",
+		'Content-Disposition',
 		`inline; filename="${paper.originalname}"`
 	);
-	res.setHeader("Content-Type", `${paper.mimetype}`);
+	res.setHeader('Content-Type', `${paper.mimetype}`);
 
 	res.send(paper.buffer);
 });
@@ -118,21 +118,21 @@ module.exports.viewPaper = catchAsync(async (req, res) => {
 /**
  * @description Returns the suggesstions for the search query.
  */
-module.exports.getSuggestions = catchAsync(async (req, res) => {
+export const getSuggestions = catchAsync(async (req, res) => {
 	const { query } = req.query;
 
 	const suggestions = await Paper.find({
-		courseTitle: { $regex: new RegExp(query, "i") },
+		courseTitle: { $regex: new RegExp(query, 'i') },
 	})
 		.select(
-			"mimetype size user views semester  assessmentType courseTitle programmeName"
+			'mimetype size user views semester  assessmentType courseTitle programmeName'
 		)
 		.limit(10);
 
 	res.status(200).json(suggestions);
 });
 
-module.exports.sortPapers = catchAsync(async (req, res) => {
+export const sortPapers = catchAsync(async (req, res) => {
 	const { programmeName, semester, assessmentType } = req.body;
 
 	// Build the query conditions based on provided filters
@@ -146,14 +146,14 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 		(key) => query[key] === undefined && delete query[key]
 	);
 
-	const papers = await Paper.find(query).select("-__v -buffer").limit(10);
+	const papers = await Paper.find(query).select('-__v -buffer').limit(10);
 
 	if (papers.length === 0) {
-		req.flash("error", "No papers found :( Try different filter...");
-		return res.redirect("/api/v1/papers");
+		req.flash('error', 'No papers found :( Try different filter...');
+		return res.redirect('/api/v1/papers');
 	}
 
-	res.render("vqbank/index", {
+	res.render('vqbank/index', {
 		papers,
 		options: req.body,
 	});
@@ -162,18 +162,18 @@ module.exports.sortPapers = catchAsync(async (req, res) => {
 /**
  * @description Render Edit paper
  */
-module.exports.renderEditPaper = catchAsync(async (req, res) => {
+export const renderEditPaper = catchAsync(async (req, res) => {
 	const { id } = req.params;
-	const paper = await Paper.findById(id).select("-buffer");
+	const paper = await Paper.findById(id).select('-buffer');
 
 	if (!paper) {
-		req.flash("error", "Paper doesn't exist");
-		return res.redirect("/papers");
+		req.flash('error', "Paper doesn't exist");
+		return res.redirect('/papers');
 	}
 
-	return res.render("vqbank/upload", {
+	return res.render('vqbank/upload', {
 		paper,
-		button: "Update",
+		button: 'Update',
 		action: `/api/v1/paper/edit/${id}?_method=PUT`,
 		required: false,
 	});
@@ -182,26 +182,26 @@ module.exports.renderEditPaper = catchAsync(async (req, res) => {
 /**
  * @description Edits paper
  */
-module.exports.editPaper = catchAsync(async (req, res) => {
+export const editPaper = catchAsync(async (req, res) => {
 	const { id } = req.params;
 	const { semester, assessmentType, courseTitle, programmeName } = req.body;
 
 	if (!semester || !assessmentType || !courseTitle || !programmeName) {
-		console.log("validation failed...");
-		req.flash("error", "Please fill all the fields");
+		console.log('validation failed...');
+		req.flash('error', 'Please fill all the fields');
 		return res.redirect(`/api/v1/paper/edit/${id}`);
 	}
 
-	const validProgrammeNames = ["mca", "btech", "mtech", "msc", "other"];
-	const validSemesters = ["fall-sem", "winter-sem", "summer-sem", "other"];
+	const validProgrammeNames = ['mca', 'btech', 'mtech', 'msc', 'other'];
+	const validSemesters = ['fall-sem', 'winter-sem', 'summer-sem', 'other'];
 	const validAssessmentTypes = [
-		"cat-1",
-		"cat-2",
-		"mid-term",
-		"fat",
-		"re-fat",
-		"re-cat",
-		"other",
+		'cat-1',
+		'cat-2',
+		'mid-term',
+		'fat',
+		're-fat',
+		're-cat',
+		'other',
 	];
 
 	if (
@@ -209,14 +209,14 @@ module.exports.editPaper = catchAsync(async (req, res) => {
 		!validSemesters.includes(semester) ||
 		!validAssessmentTypes.includes(assessmentType)
 	) {
-		req.flash("error", "Invalid options choosen");
+		req.flash('error', 'Invalid options choosen');
 		return res.redirect(`/api/v1/paper/edit/${id}`);
 	}
 
 	if (courseTitle.length > 75) {
 		req.flash(
-			"error",
-			"Invalid course title, title length must be within 75 characters"
+			'error',
+			'Invalid course title, title length must be within 75 characters'
 		);
 		return res.redirect(`/api/v1/paper/edit/${id}`);
 	}
@@ -224,8 +224,8 @@ module.exports.editPaper = catchAsync(async (req, res) => {
 	const paper = await Paper.findById(id);
 
 	if (!paper) {
-		req.flash("error", "Paper doesn't exist");
-		return res.redirect("/papers");
+		req.flash('error', "Paper doesn't exist");
+		return res.redirect('/papers');
 	}
 
 	let query = {
@@ -254,18 +254,18 @@ module.exports.editPaper = catchAsync(async (req, res) => {
 	}
 
 	// Update the paper
-	await Paper.findByIdAndUpdate(id, query["$set"], {
+	await Paper.findByIdAndUpdate(id, query['$set'], {
 		new: true,
 		runValidators: true,
 	});
 
-	req.flash("success", "Paper updated successfully");
-	return res.redirect("/api/v1/papers");
+	req.flash('success', 'Paper updated successfully');
+	return res.redirect('/api/v1/papers');
 });
 
-module.exports.deletePaper = catchAsync(async (req, res) => {
+export const deletePaper = catchAsync(async (req, res) => {
 	const { id } = req.params;
 	await Paper.findByIdAndDelete(id);
-	req.flash("success", "Paper deleted successfully");
-	return res.redirect("/api/v1/papers");
+	req.flash('success', 'Paper deleted successfully');
+	return res.redirect('/api/v1/papers');
 });

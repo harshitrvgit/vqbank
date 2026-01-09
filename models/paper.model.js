@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const paperSchema = new Schema(
@@ -26,7 +27,7 @@ const paperSchema = new Schema(
 		},
 		user: {
 			type: Schema.Types.ObjectId,
-			ref: "User",
+			ref: 'User',
 			required: true,
 		},
 		views: {
@@ -35,11 +36,11 @@ const paperSchema = new Schema(
 		},
 		semester: {
 			type: String,
-			required: true
+			required: true,
 		},
 		assessmentType: {
 			type: String,
-			required: true
+			required: true,
 		},
 		courseTitle: {
 			type: String,
@@ -47,18 +48,18 @@ const paperSchema = new Schema(
 		},
 		programmeName: {
 			type: String,
-			required: true
+			required: true,
 		},
 		visibility: {
 			type: Boolean,
-			default: true
-		}
+			default: true,
+		},
 	},
 	{
 		timestamps: true,
 	}
 );
 
-const Paper = mongoose.model("Paper", paperSchema);
+const Paper = mongoose.model('Paper', paperSchema);
 
-module.exports = Paper;
+export default Paper;
