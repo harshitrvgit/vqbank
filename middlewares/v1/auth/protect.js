@@ -13,11 +13,6 @@ const User = require("../../../models/user.model.js");
  *
  */
 const protect = async (req, res, next) => {
-	if (req.oidc.isAuthenticated()) {
-		console.log(req.oidc.isAuthenticated());
-		return next();
-	}
-
 	let jwtToken;
 	try {
 		if (req.signedCookies && req.signedCookies.token) {
