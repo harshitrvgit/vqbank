@@ -10,10 +10,12 @@
 	"description": "A collection of VIT Vellore examination papers",
 	"license": "MIT",
 	"scripts": {
-		"start": "bun app.js",
+		"start": "bun run --bun app.js",
 		"node-start": "node app.js",
-		"dev": "env-cmd -f ./env/dev.env bun --watch app.js",
-		"prod": "env-cmd -f ./env/prod.env bun --watch app.js"
+		"node-dev": "env-cmd -f ./env/dev.env node app.js",
+		"node-prod": "env-cmd -f ./env/prod.env node app.js",
+		"dev": "env-cmd -f ./env/dev.env bun run --bun --watch app.js",
+		"prod": "env-cmd -f ./env/prod.env bun run --bun --watch app.js"
 	},
 	"dependencies": {
 		"bcrypt": "^5.1.1",
