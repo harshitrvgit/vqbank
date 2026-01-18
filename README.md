@@ -9,7 +9,7 @@
 
 <p style="margin-top: 1em;">Collections of all the examination papers of VIT University, Vellore</p>
 
-[Click here](https://vqbank.onrender.com/) to visit the site.
+[Click here](https://vqbank.harshitrv.deno.net) to visit the site.
 
 ## Setting up the app locally.
 
