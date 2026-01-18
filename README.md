@@ -15,13 +15,13 @@
 
 ### Prerequisites
 
-- NodeJS v16.x
-- MongoDB v5.x  [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+- NodeJS v22.x | Bun
+- MongoDB v7.x  [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
 - MongoDB Compass(optional)
 
 1. Install dependencies:
 ```sh
-npm install
+nvm use && npm install
 ```
 2. Create a ```dev.env``` file in the ```env``` folder root of the project 
 ```sh

@@ -1,21 +1,21 @@
 /**
  * Model import.
  */
-const User = require("../../../models/user.model.js");
+import User from '../../../models/user.model.js';
 
 /**
  * @description - Render Admin Dashboard
  */
-module.exports.renderAdmin = async (req, res) => {
-	return res.render("admin/index");
+export const renderAdmin = async (req, res) => {
+	return res.render('admin/index');
 };
 
 /**
  * @description - Get all users
  */
-module.exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
 	const users = await User.find();
-	return res.render("admin/users", {
+	return res.render('admin/users', {
 		users,
 	});
 };
