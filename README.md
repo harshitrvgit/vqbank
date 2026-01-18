@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">vqBank </h1> 
+<h1 style="text-align: center;">vqBank </h1>
 
 <div style="display: flex; justify-content: center;"> 
     <img style="margin-right: 1em;" alt="Discord" src="https://img.shields.io/discord/764030364611117056">
@@ -16,19 +16,24 @@
 ### Prerequisites
 
 - NodeJS v22.x | Bun
-- MongoDB v7.x  [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+- MongoDB v7.x [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514) | [Mac](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
 - MongoDB Compass(optional)
 
 1. Install dependencies:
+
 ```sh
 nvm use && npm install
 ```
-2. Create a ```dev.env``` file in the ```env``` folder root of the project 
+
+2. Create a `dev.env` file in the `env` folder root of the project
+
 ```sh
 mkdir env
 touch env/dev.env
 ```
--  with the following content:
+
+- with the following content:
+
 ```sh
 PORT=3000
 JWT_SECRET=<JWT_SECRET_OF_YOUR_CHOICE>
@@ -36,9 +41,11 @@ JWT_EXP=1d
 MONGODB_URI=mongodb://localhost:27017/vqbank
 SIGN_COOKIE=<SIGN_COOKIE_OF_YOUR_CHOICE>
 ```
+
 3. Make sure your mongoDB is running and accessible from your local machine.
 
 4. Finally start the app
+
 ```sh
 npm run dev
 ```
