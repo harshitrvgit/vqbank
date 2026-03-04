@@ -33,4 +33,11 @@ export default [
 		},
 		ignores: ['dist/', 'node_modules/', 'exp/', 'public/'],
 	},
+	// Relax rules for test files
+	{
+		files: ['**/*.test.ts'],
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off',
+		},
+	},
 ];

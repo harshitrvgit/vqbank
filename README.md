@@ -52,8 +52,9 @@ npm run dev
 
 ## Contributing
 
+- 📖 Read the [Project Documentation](./docs/project.md) to understand the codebase, architecture, and conventions.
 - Read the [Code of Conduct](./docs/code-of-conduct.md) first.
-- Contibuting [guidelines](./docs/contributing/contributing.md)
+- Contributing [guidelines](./docs/contributing/contributing.md)
 
 ## License
 
