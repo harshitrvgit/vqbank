@@ -9,6 +9,10 @@ import upload from '@/utils/multer.js';
  */
 import protect from '@/middlewares/v1/auth/protect.js';
 import role from '@/middlewares/v1/auth/role.js';
+import {
+	generalLimiter,
+	downloadLimiter,
+} from '@/middlewares/v1/rateLimit.js';
 
 /**
  * Controller
@@ -32,7 +36,7 @@ const paperRouter = Router();
  */
 paperRouter
 	.route('/upload')
-	.get(protect, renderUpload)
+	.get(protect, role.checkRole(role.ROLES.Admin), renderUpload)
 	.post(
 		protect,
 		role.checkRole(role.ROLES.Admin),
@@ -40,16 +44,16 @@ paperRouter
 		uploadPaper
 	);
 
-paperRouter.route('/papers').get(protect, getAllPapers);
+paperRouter.route('/papers').get(generalLimiter, getAllPapers);
 
-paperRouter.route('/paper/view/:paperId').get(protect, viewPaper);
+paperRouter.route('/paper/view/:paperId').get(downloadLimiter, viewPaper);
 
-paperRouter.route('/paper/suggestions').get(protect, getSuggestions);
+paperRouter.route('/paper/suggestions').get(generalLimiter, getSuggestions);
 
 paperRouter
 	.route('/paper/sort')
-	.get(protect, sortPapers)
-	.post(protect, sortPapers);
+	.get(generalLimiter, sortPapers)
+	.post(generalLimiter, sortPapers);
 
 paperRouter
 	.route('/paper/edit/:id')

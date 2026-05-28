@@ -27,6 +27,9 @@ import sessionConfig from '@/configs/sessionConfig.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
+// Sit behind nginx on loopback (Cloudflare tunnel → nginx → app). Trust
+// X-Forwarded-For only from 127.0.0.1 so req.ip resolves to the real client.
+app.set('trust proxy', 'loopback');
 const PORT = process.env.PORT || 3000;
 
 /**
@@ -48,7 +51,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 app.use(express.urlencoded({ extended: true }));

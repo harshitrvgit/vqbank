@@ -114,13 +114,23 @@ export const viewPaper = catchAsync(async (req: Request, res: Response) => {
 
 export const getSuggestions = catchAsync(
 	async (req: Request, res: Response) => {
-		const { query } = req.query;
+		const raw = typeof req.query.query === 'string' ? req.query.query.trim() : '';
+
+		if (!raw) {
+			res.status(200).json([]);
+			return;
+		}
+
+		// Escape regex metacharacters so a user can't crash the request
+		// (e.g. `?query=[` throws SyntaxError) or run pathological patterns
+		// against Mongo. Endpoint is public now — input is fully untrusted.
+		const safe = raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 		const suggestions = await Paper.find({
-			courseTitle: { $regex: new RegExp(query as string, 'i') },
+			courseTitle: { $regex: safe, $options: 'i' },
 		})
 			.select(
-				'mimetype size user views semester  assessmentType courseTitle programmeName'
+				'originalname mimetype size views semester assessmentType courseTitle programmeName'
 			)
 			.limit(10);
 

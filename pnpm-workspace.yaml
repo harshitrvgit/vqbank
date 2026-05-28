@@ -1,0 +1,40 @@
+# Packages explicitly reviewed and allowed to run install scripts.
+# Anything not listed here is treated as unreviewed and will fail
+# the install (see `strictDepBuilds` below).
+allowBuilds:
+  bcrypt: true
+  esbuild: true
+
+# Quarantine newly published versions for 2 days (in minutes).
+# Most malicious releases are caught and pulled from the registry
+# within hours, so this cheaply blocks the typical attack window.
+minimumReleaseAge: 2880
+
+# Packages exempted from the release-age gate. Keep empty unless a
+# specific package genuinely needs latest-on-publish; every entry
+# here is a hole in the quarantine.
+minimumReleaseAgeExclude: []
+
+# Refuse a version whose trust level dropped vs. earlier releases
+# (e.g. previously had provenance / trusted publisher and now does not).
+trustPolicy: no-downgrade
+
+# Fail installs that contain unreviewed build scripts rather than warn.
+strictDepBuilds: true
+
+# Never auto-approve every dependency's install scripts. Pinned to the
+# default so an env var or future config can't quietly enable it.
+dangerouslyAllowAllBuilds: false
+
+# Only direct dependencies may resolve from git / tarball URLs;
+# transitive deps must come from the configured registry.
+blockExoticSubdeps: true
+
+# Write exact versions to package.json on `pnpm add` (no `^` or `~`).
+# Without this, every new install would re-introduce caret ranges and
+# the only thing pinning us would be the lockfile.
+savePrefix: ''
+
+# Refuse to install packages whose `engines` field is incompatible with
+# the running Node version, instead of just warning.
+engineStrict: true

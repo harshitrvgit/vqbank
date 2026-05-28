@@ -22,7 +22,7 @@
 1. Install dependencies:
 
 ```sh
-nvm use && npm install
+nvm use && pnpm install
 ```
 
 2. Create a `dev.env` file in the `env` folder root of the project
@@ -47,8 +47,24 @@ SIGN_COOKIE=<SIGN_COOKIE_OF_YOUR_CHOICE>
 4. Finally start the app
 
 ```sh
-npm run dev
+pnpm dev
 ```
+
+## Production deployment
+
+This app runs on a single host behind nginx and pm2, fronted by a
+Cloudflare tunnel. The day-to-day deploy is a one-liner:
+
+```sh
+pnpm deploy
+```
+
+See [docs/deployment.md](./docs/deployment.md) for the full guide —
+architecture diagram, `ecosystem.config.cjs` reference,
+[`scripts/deploy.sh`](./scripts/deploy.sh) walkthrough, nginx and
+cloudflared snippets, and a "common pitfalls" section covering the
+gotchas that bit us during initial setup (pm2 cluster mode + ESM,
+tilde-in-interpreter-paths, `pm2 save` semantics, etc.).
 
 ## Contributing
 
