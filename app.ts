@@ -37,6 +37,8 @@ import userRouter from '@/router/v1/user/user.router.js';
 
 import userAuthRouter from '@/router/v1/user/user.auth.router.js';
 import v2UserAuthRouter from '@/router/v2/user/user.v2.auth.router.js';
+import v2PaperRouter from '@/router/v2/paper/paper.v2.router.js';
+import v2AdminRouter from '@/router/v2/admin/admin.v2.router.js';
 
 import paperRouter from '@/router/v1/paper/paper.router.js';
 
@@ -66,11 +68,13 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
  */
 app.use('/api/v1', adminRouter);
 app.use('/api/v1', userRouter);
-
 app.use('/api/v1', userAuthRouter);
-app.use('/api/v2', v2UserAuthRouter);
-
 app.use('/api/v1', paperRouter);
+
+app.use('/api/v2', v2AdminRouter);
+app.use('/api/v2', v2UserAuthRouter);
+app.use('/api/v2', v2UserAuthRouter);
+app.use('/api/v2', v2PaperRouter);
 
 /**
  * Landing page route

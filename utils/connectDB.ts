@@ -18,6 +18,7 @@ const connectDB = async (
 		else throw new Error('Connection to db failed! ❌');
 	} catch (e) {
 		console.error(`Error in [connectDB]: ${e}`);
+		throw e;
 	}
 };
 
