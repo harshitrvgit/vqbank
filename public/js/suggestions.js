@@ -97,7 +97,7 @@ const buildPaperCard = (paper) => {
 	card.querySelector('.js-size').textContent = size;
 	card.querySelector('.js-views').textContent = paper.views ?? 0;
 
-	const viewUrl = `/api/v1/paper/view/${id}`;
+	const viewUrl = `/paper/view/${id}`;
 	card.querySelector('.js-view').href = viewUrl;
 	const downloadLink = card.querySelector('.js-download');
 	downloadLink.href = viewUrl;
@@ -136,7 +136,7 @@ const handleInput = async () => {
 
 	try {
 		const response = await fetch(
-			`/api/v1/paper/suggestions?query=${encodeURIComponent(query)}`,
+			`/paper/suggestions?query=${encodeURIComponent(query)}`,
 			{ signal }
 		);
 		if (!response.ok) throw new Error(`HTTP ${response.status}`);

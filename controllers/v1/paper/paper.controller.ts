@@ -3,6 +3,10 @@ import catchAsync from '@/utils/server-error-handling/catchAsyncError.js';
 import Paper from '@/models/paper.model.js';
 
 export const renderUpload = (req: Request, res: Response) => {
+	res.locals.title = 'Upload Question Paper - vqBank';
+	res.locals.description = 'Upload a VIT question paper to vqBank.';
+	res.locals.metaRobots = 'noindex,nofollow';
+
 	return res.render('vqbank/upload', {
 		paper: {},
 		button: 'Upload',
@@ -79,11 +83,28 @@ export const uploadPaper = catchAsync(async (req: Request, res: Response) => {
 	await paper.save();
 
 	req.flash('success', 'Paper uploaded successfully');
-	return res.redirect('/api/v1/papers');
+	return res.redirect('/papers');
 });
 
 export const getAllPapers = catchAsync(async (req: Request, res: Response) => {
 	const papers = await Paper.find({}).select('-__v -buffer');
+	res.locals.title = 'VIT Previous Year Question Papers - vqBank';
+	res.locals.description =
+		'Browse VIT Vellore previous year question papers by course, programme, semester, and assessment type.';
+	res.locals.canonicalUrl = `${res.locals.siteUrl}/papers`;
+	res.locals.structuredData = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'VIT Previous Year Question Papers',
+		url: `${res.locals.siteUrl}/papers`,
+		description: res.locals.description,
+		mainEntity: papers.slice(-10).map((paper) => ({
+			'@type': 'DigitalDocument',
+			name: paper.courseTitle || paper.originalname,
+			url: `${res.locals.siteUrl}/paper/view/${paper._id}`,
+			encodingFormat: paper.mimetype,
+		})),
+	};
 
 	return res.render('vqbank/index', {
 		papers,
@@ -155,8 +176,21 @@ export const sortPapers = catchAsync(async (req: Request, res: Response) => {
 
 	if (papers.length === 0) {
 		req.flash('error', 'No papers found :( Try different filter...');
-		return res.redirect('/api/v1/papers');
+		return res.redirect('/papers');
 	}
+
+	const filters = [programmeName, semester, assessmentType]
+		.filter(Boolean)
+		.join(', ');
+
+	res.locals.title = filters
+		? `${filters.toUpperCase()} Question Papers - vqBank`
+		: 'Filtered VIT Question Papers - vqBank';
+	res.locals.description = filters
+		? `Browse VIT question papers filtered by ${filters}.`
+		: 'Browse filtered VIT question papers on vqBank.';
+	res.locals.canonicalUrl = `${res.locals.siteUrl}/papers`;
+	res.locals.metaRobots = 'noindex,follow';
 
 	res.render('vqbank/index', {
 		papers,
@@ -173,6 +207,10 @@ export const renderEditPaper = catchAsync(
 			req.flash('error', "Paper doesn't exist");
 			return res.redirect('/papers');
 		}
+
+		res.locals.title = `Edit ${paper.courseTitle || paper.originalname} - vqBank`;
+		res.locals.description = 'Edit question paper metadata on vqBank.';
+		res.locals.metaRobots = 'noindex,nofollow';
 
 		return res.render('vqbank/upload', {
 			paper,
@@ -268,12 +306,12 @@ export const editPaper = catchAsync(async (req: Request, res: Response) => {
 	);
 
 	req.flash('success', 'Paper updated successfully');
-	return res.redirect('/api/v1/papers');
+	return res.redirect('/papers');
 });
 
 export const deletePaper = catchAsync(async (req: Request, res: Response) => {
 	const { id } = req.params;
 	await Paper.findByIdAndDelete(id);
 	req.flash('success', 'Paper deleted successfully');
-	return res.redirect('/api/v1/papers');
+	return res.redirect('/papers');
 });

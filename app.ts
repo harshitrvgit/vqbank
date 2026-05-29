@@ -17,6 +17,8 @@ import { dirname } from 'node:path';
 import connectDB from '@/utils/connectDB.js';
 import AppError from '@/utils/server-error-handling/AppError.js';
 import { getLoggedInUser } from '@/utils/getLoggedInUser.js';
+import catchAsync from '@/utils/server-error-handling/catchAsyncError.js';
+import Paper from '@/models/paper.model.js';
 /**
  * Configs
  */
@@ -31,6 +33,15 @@ const app = express();
 // X-Forwarded-For only from 127.0.0.1 so req.ip resolves to the real client.
 app.set('trust proxy', 'loopback');
 const PORT = process.env.PORT || 3000;
+const SITE_URL = process.env.SITE_URL || 'https://vqbank.harshitrv.in';
+
+const escapeXml = (value: unknown) =>
+	String(value)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
 
 /**
  * Routes imports
@@ -62,8 +73,70 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
 	res.locals.user = await getLoggedInUser(req);
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');
+	res.locals.siteUrl = SITE_URL;
+	res.locals.originalUrl = req.originalUrl.split('?')[0];
+	res.locals.canonicalUrl = `${SITE_URL}${res.locals.originalUrl}`;
+	res.locals.title = 'vqBank - VIT Question Papers';
+	res.locals.description =
+		'Browse and download VIT Vellore previous year question papers by course, programme, semester, and exam type.';
+	res.locals.metaRobots = 'index,follow';
+	res.locals.structuredData = null;
 	next();
 });
+
+app.route('/robots.txt').get((_req: Request, res: Response) => {
+	res.type('text/plain').send(`User-agent: *
+Allow: /
+Disallow: /api/v1/login
+Disallow: /api/v1/register
+Disallow: /api/v1/logout
+Disallow: /api/v1/upload
+Disallow: /api/v1/paper/view/
+Disallow: /api/v1/paper/edit/
+Disallow: /api/v1/paper/delete/
+Disallow: /upload
+Disallow: /paper/edit/
+Disallow: /paper/delete/
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`);
+});
+
+app.route('/sitemap.xml').get(
+	catchAsync(async (_req: Request, res: Response) => {
+		const papers = await Paper.find({ visibility: true })
+			.select('_id updatedAt')
+			.sort({ updatedAt: -1 })
+			.limit(50000);
+
+		const staticUrls = [
+			{ loc: `${SITE_URL}/landing`, priority: '1.0' },
+			{ loc: `${SITE_URL}/papers`, priority: '0.9' },
+		];
+
+		const paperUrls = papers.map((paper) => ({
+			loc: `${SITE_URL}/paper/view/${paper._id}`,
+			lastmod: paper.updatedAt.toISOString(),
+			priority: '0.6',
+		}));
+
+		const urls = [...staticUrls, ...paperUrls]
+			.map(
+				(url) => `<url>
+	<loc>${escapeXml(url.loc)}</loc>${'lastmod' in url ? `
+	<lastmod>${escapeXml(url.lastmod)}</lastmod>` : ''}
+	<priority>${url.priority}</priority>
+</url>`
+			)
+			.join('\n');
+
+		res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`);
+	})
+);
 /**
  * Routes middlewares
  */
@@ -74,18 +147,44 @@ app.use('/api/v1', userAuthRouter);
 app.use('/api/v2', v2UserAuthRouter);
 
 app.use('/api/v1', paperRouter);
+app.use('/', paperRouter);
 
 /**
  * Landing page route
  */
 app.route('/landing').get(async (_req: Request, res: Response) => {
+	res.locals.title = 'vqBank - VIT Vellore Previous Year Question Papers';
+	res.locals.description =
+		'Search, browse, and download VIT Vellore question papers for CAT, FAT, re-FAT, and other assessments.';
+	res.locals.canonicalUrl = `${SITE_URL}/landing`;
+	res.locals.structuredData = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'vqBank',
+		url: SITE_URL,
+		description: res.locals.description,
+	};
+
 	return res.render('landing');
 });
 
 app.route('/').get(async (req: Request, res: Response) => {
 	if (req.signedCookies && req.signedCookies.token) {
-		return res.redirect('/api/v1/papers');
+		return res.redirect('/papers');
 	}
+
+	res.locals.title = 'vqBank - VIT Vellore Previous Year Question Papers';
+	res.locals.description =
+		'Search, browse, and download VIT Vellore question papers for CAT, FAT, re-FAT, and other assessments.';
+	res.locals.canonicalUrl = `${SITE_URL}/`;
+	res.locals.structuredData = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'vqBank',
+		url: SITE_URL,
+		description: res.locals.description,
+	};
+
 	return res.render('landing');
 });
 

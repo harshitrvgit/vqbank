@@ -10,8 +10,11 @@ export const renderRegister = (req: Request, res: Response) => {
 			'success',
 			'You are already logged in, try logging out before signing up again'
 		);
-		return res.redirect('/api/v1/papers');
+		return res.redirect('/papers');
 	} else {
+		res.locals.title = 'Register - vqBank';
+		res.locals.description = 'Create a vqBank account.';
+		res.locals.metaRobots = 'noindex,nofollow';
 		return res.render('auth/user/register');
 	}
 };
@@ -52,10 +55,13 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
 	res.cookie('token', token, { signed: true });
 	req.flash('success', 'Welcome to vqbank');
 
-	return res.redirect('/api/v1/papers');
+	return res.redirect('/papers');
 });
 
 export const renderLogin = (req: Request, res: Response) => {
+	res.locals.title = 'Login - vqBank';
+	res.locals.description = 'Log in to vqBank.';
+	res.locals.metaRobots = 'noindex,nofollow';
 	return res.render('auth/user/login');
 };
 
@@ -91,7 +97,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
 	res.cookie('token', token, { signed: true });
 	req.flash('success', 'Welcome back to vqbank');
 
-	return res.redirect('/api/v1/papers');
+	return res.redirect('/papers');
 });
 
 export const logoutUser = catchAsync(async (req: Request, res: Response) => {

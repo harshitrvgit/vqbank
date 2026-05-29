@@ -13,7 +13,7 @@
     </div>
     <div id="suggestions"></div>
 
-    <form action="/api/v1/paper/sort" method="POST">
+    <form action="/paper/sort" method="POST">
         <select class="form-select mb-3" name="programmeName" id="programmeName">
             <option value="<%= options?.programmeName %>"><%= options?.programmeName?.toUpperCase() || "--Please choose an option--" %></option>
             <option value="mca">MCA</option>
@@ -61,8 +61,8 @@
             <div class="card-body">
             <div class="mt-3 d-flex">
                 <div class="btn-group" role="group" aria-label="general view and download buttons">
-                    <a class="btn btn-outline-primary" href="/api/v1/paper/view/<%= papers[i]._id %>" target="_blank">View</a>
-                    <a class="btn btn-success" href="/api/v1/paper/view/<%= papers[i]._id %>" download="<%= papers[i].originalname %>">Download</a>
+                    <a class="btn btn-outline-primary" href="/paper/view/<%= papers[i]._id %>" target="_blank">View</a>
+                    <a class="btn btn-success" href="/paper/view/<%= papers[i]._id %>" download="<%= papers[i].originalname %>">Download</a>
                 </div>
                 <% if(user && user.role === 'ROLE_ADMIN') { %>
                     <div class="btn-group ms-3" role="group" aria-label="admin accessible buttons">
