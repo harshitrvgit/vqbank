@@ -78,6 +78,10 @@ app.use('/api/v1', paperRouter);
 /**
  * Landing page route
  */
+app.route('/landing').get(async (_req: Request, res: Response) => {
+	return res.render('landing');
+});
+
 app.route('/').get(async (req: Request, res: Response) => {
 	if (req.signedCookies && req.signedCookies.token) {
 		return res.redirect('/api/v1/papers');
